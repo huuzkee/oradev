@@ -11,12 +11,12 @@ RUN yum clean all
 RUN yum update -y
 
 # Install Oracle XE
-ADD disk1/oracle-xe-11.2.0-1.0.x86_64.rpm /tmp/oracle-xe-11.2.0-1.0.x86_64.rpm
+ADD lib/oracle-xe-11.2.0-1.0.x86_64.rpm /tmp/oracle-xe-11.2.0-1.0.x86_64.rpm
 
 RUN yum localinstall -y /tmp/oracle-xe-11.2.0-1.0.x86_64.rpm
 RUN rm -rf /tmp/img/oracle-xe-11.2.0-1.0.x86_64.rpm
 
-ADD init.ora initXETemp.ora disk1/response/xe.rsp /u01/app/oracle/product/11.2.0/xe/config/scripts/
+ADD lib/init.ora lib/initXETemp.ora lib/response/xe.rsp /u01/app/oracle/product/11.2.0/xe/config/scripts/
 
 RUN chown oracle:dba /u01/app/oracle/product/11.2.0/xe/config/scripts/*.ora \
                      /u01/app/oracle/product/11.2.0/xe/config/scripts/xe.rsp
@@ -29,14 +29,14 @@ ENV PATH        $ORACLE_HOME/bin:$PATH
 RUN /etc/init.d/oracle-xe configure responseFile=/u01/app/oracle/product/11.2.0/xe/config/scripts/xe.rsp
 
 # Run script
-ADD start.sh /
+ADD lib/start.sh /
 RUN chmod +x  start.sh
 
 
-ADD disk1/jdk-8u73-linux-x64.rpm  /tmp/jdk-8u73-linux-x64.rpm
+ADD lib/jdk-8u73-linux-x64.rpm  /tmp/jdk-8u73-linux-x64.rpm
 RUN yum localinstall -y  /tmp/jdk-8u73-linux-x64.rpm
 
-ADD disk1/scala-2.11.8.rpm /tmp/scala-2.11.8.rpm
+ADD lib/scala-2.11.8.rpm /tmp/scala-2.11.8.rpm
 RUN yum localinstall -y /tmp/scala-2.11.8.rpm
 
 RUN curl https://bintray.com/sbt/rpm/rpm | tee /etc/yum.repos.d/bintray-sbt-rpm.repo
@@ -109,7 +109,7 @@ RUN java -version
 
 USER root
 WORKDIR /
-ADD sudoers /
+ADD lib/sudoers /
 RUN chown -R root:root sudoers
 #RUN groupadd dev
 #RUN useradd -g devusr  devusr
